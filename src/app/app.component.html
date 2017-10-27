@@ -1,27 +1,78 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-      <form>  <!-- there is no 'action="submit"' property on here b/c  -->
-        <div id="user-data">  <!--we want to submit the form to angular, not http -->
-          <div class="form-group">
+      <form (ngSubmit)="onSubmit(f)" #f="ngForm">  <!-- there is no 'action="submit"' property on here b/c  -->
+        <div ngModelGroup="userData" id="user-data">  <!--we want to submit the form to angular, not http -->
+          <div class="form-group"> <!-- ngModelGroup groups controls together with an object key we created: userData  -->
             <label for="username">Username</label>
-            <input type="text" id="username" class="form-control">
+            <input
+            type="text"
+            id="username"
+            class="form-control"
+            ngModel
+            name="username"
+            required
+            >
           </div>
           <button class="btn btn-default" type="button">Suggest an Username</button>
           <div class="form-group">
-            <label for="email">Mail</label>
-            <input type="email" id="email" class="form-control">
+            <label for="email">Mail</label> <!-- the lone 'email' property below is built in. Checks if valid email.-->
+            <input
+            type="email"
+            id="email"
+            class="form-control"
+            ngModel
+            name="email"
+            required
+            email
+            #email="ngModel"> <!-- this reference uses ngModel to give us access to the control -->
+            <span *ngIf="!email.valid && email.touched" class="help-block">Please enter a valid email!</span> <!-- help-block is a bootstrap class -->
           </div>
         </div>
         <div class="form-group">
           <label for="secret">Secret Questions</label>
-          <select id="secret" class="form-control">
+          <select
+          id="secret"
+          class="form-control"
+          [ngModel]="defaultQuestion"
+          name="secret">
             <option value="pet">Your first Pet?</option>
             <option value="teacher">Your first teacher?</option>
           </select>
         </div>
-        <button class="btn btn-primary" type="submit">Submit</button>
+        <div class="form-group">
+          <textarea
+          class="form-control"
+          name="questionAnswer"
+          rows="3"
+          [(ngModel)]="answer"
+          >
+          </textarea>
+        </div>
+        <p>Your reply: {{answer}}</p>
+        <div *ngFor="let gender of genders" class="radio">
+          <label> <!-- note the [value] in the input is bound to 'gender' b/c the value of the input in out javascript
+                        form object will be whatever value the user selected -->
+            <input
+            type="radio"
+            name="gender"
+            ngModel
+            [value]="gender"
+            required>
+            {{ gender }}
+          </label>
+        </div>
+        <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="!f.valid">Submit</button>
       </form>
+      <div *ngIf="submitted" class="answers">
+        <p>Name: {{ userData.name}}</p>
+        <p>Email: {{ userData.email }}</p>
+        <p>Gender: {{userData.gender }}</p>
+        <p>Answer: {{ userData.answer }}</p>
+      </div>
     </div>
   </div>
 </div>
