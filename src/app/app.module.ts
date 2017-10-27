@@ -5,6 +5,9 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 
+
+// note: when we refer to "control" we are referring to the javascript object of the form
+
 @NgModule({
   declarations: [
     AppComponent
